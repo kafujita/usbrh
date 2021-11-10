@@ -450,7 +450,7 @@ static const struct usbrh_proc_entry USBRH_ENTRY_LIST[] = {
     { "heater",         usbrh_proc_heater_read, usbrh_proc_heater_write },
     {},
 };
-static struct file_operations usbrh_proc_ops[ARRAY_SIZE(USBRH_ENTRY_LIST)] ;
+static struct proc_ops usbrh_proc_ops[ARRAY_SIZE(USBRH_ENTRY_LIST)] ;
 
 static void usbrh_create_proc(struct usbrh *dev)
 {
@@ -474,7 +474,7 @@ static void usbrh_create_proc(struct usbrh *dev)
 
     for (i = 0; USBRH_ENTRY_LIST[i].name != NULL; i++) {
         mode = S_IFREG|S_IRUGO;
-        if (usbrh_proc_ops[i].write != NULL) {
+        if (usbrh_proc_ops[i].proc_write != NULL) {
             mode |= S_IWUSR;
         }
 
@@ -685,11 +685,10 @@ static int __init usbrh_init(void)
     int result;
 
     for (i = 0; i < ARRAY_SIZE(USBRH_ENTRY_LIST); i++) {
-        usbrh_proc_ops[i].owner   = THIS_MODULE;
-        usbrh_proc_ops[i].open    = usbrh_proc_open;
-        usbrh_proc_ops[i].read    = USBRH_ENTRY_LIST[i].read;
-        usbrh_proc_ops[i].write   = USBRH_ENTRY_LIST[i].write;
-        usbrh_proc_ops[i].release = usbrh_proc_close;
+        usbrh_proc_ops[i].proc_open    = usbrh_proc_open;
+        usbrh_proc_ops[i].proc_read    = USBRH_ENTRY_LIST[i].read;
+        usbrh_proc_ops[i].proc_write   = USBRH_ENTRY_LIST[i].write;
+        usbrh_proc_ops[i].proc_release = usbrh_proc_close;
     }
 
     usbrh_proc_base = proc_mkdir(USBRH_NAME, NULL);
