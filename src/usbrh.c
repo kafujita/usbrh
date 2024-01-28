@@ -25,6 +25,10 @@
 #define HAVE_PROC_OPS
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,14,0)
+#define PDE_DATA(i) pde_data(i)
+#endif
+
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("USBRH driver");
 MODULE_VERSION("0.1.0");
